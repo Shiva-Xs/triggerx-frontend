@@ -1,0 +1,24 @@
+{
+  "name": "TriggerX | Free Crypto Price Alerts",
+  "short_name": "TriggerX",
+  "description": "Real-time crypto price alerts via email and Telegram for 400+ Binance pairs. Free, open source, no password needed.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#020208",
+  "orientation": "portrait-primary",
+  "categories": ["finance", "utilities"],
+  "icons": [
+    {
+      "src": "/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
