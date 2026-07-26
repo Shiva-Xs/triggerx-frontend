@@ -326,6 +326,24 @@ export default function AuthPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let meta = document.querySelector('meta[name="robots"]');
+    let created = false;
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'robots';
+      document.head.appendChild(meta);
+      created = true;
+    }
+    const prevContent = meta.getAttribute('content');
+    meta.setAttribute('content', 'noindex, nofollow');
+    return () => {
+      if (created) meta.remove();
+      else if (prevContent) meta.setAttribute('content', prevContent);
+      else meta.setAttribute('content', 'index, follow');
+    };
+  }, []);
+
+  useEffect(() => {
     if (localStorage.getItem('triggerx_token')) navigate('/dashboard', { replace: true });
   }, [navigate]);
 

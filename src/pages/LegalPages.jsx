@@ -157,13 +157,19 @@ export function PrivacyPage() {
     document.title = 'Privacy Policy | TriggerX';
     const meta = document.querySelector('meta[name="description"]');
     if (meta) meta.setAttribute('content', 'TriggerX Privacy Policy. Learn what data we collect, how we use it, and how we protect your privacy. No ads, no tracking, no analytics.');
+    
+    let canonical = document.querySelector('link[rel="canonical"]');
+    const origCanonical = canonical ? canonical.getAttribute('href') : 'https://www.triggerx.in/';
+    if (canonical) canonical.setAttribute('href', 'https://www.triggerx.in/privacy');
+
     return () => {
       document.title = 'TriggerX | Free Crypto Price Alerts';
       if (meta) meta.setAttribute('content', 'TriggerX sends instant email and Telegram alerts the moment your Binance price target is hit. Set crypto price alerts for BTC, ETH, SOL and 400+ pairs - free, open source, no signup password needed. Get notified in seconds.');
+      if (canonical) canonical.setAttribute('href', origCanonical);
     };
   }, []);
   return (
-    <LegalShell titleLine1="PRIVACY" titleLine2="POLICY" chipLabel="Legal" updated="April 23, 2026" active="privacy">
+    <LegalShell titleLine1="PRIVACY" titleLine2="POLICY" chipLabel="Legal" updated="July 26, 2026" active="privacy">
 
       <div style={S.callout}>
         TriggerX is built on one principle: your data is yours. This policy explains exactly what we collect, why, and what we never do. No jargon, no surprises.
@@ -247,13 +253,19 @@ export function TermsPage() {
     document.title = 'Terms of Service | TriggerX';
     const meta = document.querySelector('meta[name="description"]');
     if (meta) meta.setAttribute('content', 'TriggerX Terms of Service. Understand the rules, limitations, and disclaimers for using our free crypto price alert service.');
+
+    let canonical = document.querySelector('link[rel="canonical"]');
+    const origCanonical = canonical ? canonical.getAttribute('href') : 'https://www.triggerx.in/';
+    if (canonical) canonical.setAttribute('href', 'https://www.triggerx.in/terms');
+
     return () => {
       document.title = 'TriggerX | Free Crypto Price Alerts';
       if (meta) meta.setAttribute('content', 'TriggerX sends instant email and Telegram alerts the moment your Binance price target is hit. Set crypto price alerts for BTC, ETH, SOL and 400+ pairs - free, open source, no signup password needed. Get notified in seconds.');
+      if (canonical) canonical.setAttribute('href', origCanonical);
     };
   }, []);
   return (
-    <LegalShell titleLine1="TERMS OF" titleLine2="SERVICE" chipLabel="Legal" updated="April 23, 2026" active="terms">
+    <LegalShell titleLine1="TERMS OF" titleLine2="SERVICE" chipLabel="Legal" updated="July 26, 2026" active="terms">
 
       <div style={S.callout}>
         Please read these Terms carefully. By accessing TriggerX or installing the Chrome Extension, you agree to be bound by them. If you do not agree, please do not use the Service.
