@@ -1210,6 +1210,10 @@ export default function DashboardPage() {
   const [showOnboarding, setShowOnboarding] = useState(() => !localStorage.getItem('triggerx_visited'));
   const [toastMsg,       setToastMsg]       = useState(null);
   const [alertsExpanded, setAlertsExpanded] = useState(false);
+  const [accountMenu,    setAccountMenu]    = useState(false);
+  const [confirmAllOut,  setConfirmAllOut]  = useState(false);
+  const [signingOutAll,  setSigningOutAll]  = useState(false);
+  const accountRef = useRef(null);
 
   const showToast = useCallback((msg) => setToastMsg(msg), []);
   const dismissToast = useCallback(() => setToastMsg(null), []);
@@ -1234,6 +1238,35 @@ export default function DashboardPage() {
     localStorage.removeItem('triggerx_user');
     navigate('/');
   };
+
+  // Revokes server-side by bumping token_version, so every other browser and
+  // the extension are logged out too — not just this tab's localStorage.
+  const signOutEverywhere = async () => {
+    setSigningOutAll(true);
+    try {
+      await apiFetch('/api/v1/auth/logout-all', { method: 'POST' });
+    } catch {
+      setSigningOutAll(false);
+      setConfirmAllOut(false);
+      showToast('Could not sign out everywhere. Please try again.');
+      return;
+    }
+    signOut();
+  };
+
+  useEffect(() => {
+    if (!accountMenu) return;
+    const onDown = (e) => {
+      if (accountRef.current && !accountRef.current.contains(e.target)) setAccountMenu(false);
+    };
+    const onKey = (e) => { if (e.key === 'Escape') setAccountMenu(false); };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [accountMenu]);
 
   const onCreated = () => {
     setRefreshTick(t => t + 1);
@@ -1275,7 +1308,37 @@ export default function DashboardPage() {
         </button>
         <div className="db-nav-right">
           {user?.email && <span className="db-nav-email">{user.email}</span>}
-          <button className="db-nav-signout" onClick={signOut}>SIGN OUT</button>
+          <div className="db-nav-account" ref={accountRef}>
+            <button
+              className={`db-nav-signout${accountMenu ? ' db-nav-signout--open' : ''}`}
+              onClick={() => setAccountMenu(o => !o)}
+              aria-haspopup="menu"
+              aria-expanded={accountMenu}
+            >
+              SIGN OUT
+              <span className="db-nav-caret" aria-hidden="true" />
+            </button>
+            {accountMenu && (
+              <div className="db-nav-menu" role="menu">
+                <button
+                  className="db-nav-menu-item"
+                  role="menuitem"
+                  onClick={() => { setAccountMenu(false); signOut(); }}
+                >
+                  <span className="db-nav-menu-label">THIS DEVICE</span>
+                  <span className="db-nav-menu-sub">End the session in this browser</span>
+                </button>
+                <button
+                  className="db-nav-menu-item db-nav-menu-item--danger"
+                  role="menuitem"
+                  onClick={() => { setAccountMenu(false); setConfirmAllOut(true); }}
+                >
+                  <span className="db-nav-menu-label">ALL DEVICES</span>
+                  <span className="db-nav-menu-sub">Revoke every session and the extension</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -1350,6 +1413,35 @@ export default function DashboardPage() {
           <Link to="/terms" state={{ from: '/dashboard' }} className="db-bottom-link">TERMS</Link>
         </span>
       </div>
+
+      {confirmAllOut && (
+        <div className="db-confirm-overlay" onClick={() => !signingOutAll && setConfirmAllOut(false)}>
+          <div className="db-confirm-box" onClick={e => e.stopPropagation()}>
+            <div className="db-confirm-title">SIGN OUT — ALL DEVICES</div>
+            <div className="db-confirm-body">
+              Ends your session on every browser and in the Chrome extension.
+              You&apos;ll need a new email code to sign back in.<br/>
+              Your Telegram link and alerts stay active.
+            </div>
+            <div className="db-confirm-btns">
+              <button
+                className="db-confirm-cancel"
+                onClick={() => setConfirmAllOut(false)}
+                disabled={signingOutAll}
+              >
+                CANCEL
+              </button>
+              <button
+                className="db-confirm-ok"
+                onClick={signOutEverywhere}
+                disabled={signingOutAll}
+              >
+                {signingOutAll ? 'SIGNING OUT…' : 'SIGN OUT ALL'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

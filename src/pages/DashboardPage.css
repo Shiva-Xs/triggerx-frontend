@@ -133,7 +133,9 @@
   font-size: 11px; letter-spacing: 0.06em;
   color: var(--text-secondary);
 }
+.db-nav-account { position: relative; }
 .db-nav-signout {
+  display: flex; align-items: center; gap: 8px;
   font-family: var(--font-mono);
   font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -147,12 +149,54 @@
   --cut: 7px;
   clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
 }
-.db-nav-signout:hover {
+.db-nav-signout:hover,
+.db-nav-signout--open {
   border-color: rgba(79,91,213,0.42);
   border-top-color: rgba(120,140,255,0.50);
   color: rgba(180,196,255,0.90);
   box-shadow: inset 0 1px 0 rgba(130,150,255,0.14), 0 0 20px rgba(79,91,213,0.12), 0 3px 14px rgba(0,0,0,0.44);
 }
+.db-nav-caret {
+  width: 0; height: 0; flex-shrink: 0;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-top: 4px solid currentColor;
+  opacity: 0.65;
+  transition: transform 0.22s ease;
+}
+.db-nav-signout--open .db-nav-caret { transform: rotate(180deg); }
+.db-nav-menu {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 220;
+  min-width: 232px;
+  display: flex; flex-direction: column;
+  background: rgba(6,6,22,0.96);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(79,91,213,0.35);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.70), 0 0 40px rgba(79,91,213,0.08);
+  animation: dbSlideUp 0.16s ease;
+}
+.db-nav-menu-item {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 3px;
+  padding: 11px 14px; cursor: pointer; text-align: left;
+  background: none; border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.18s ease;
+}
+.db-nav-menu-item:last-child { border-bottom: none; }
+.db-nav-menu-item:hover { background: rgba(79,91,213,0.12); }
+.db-nav-menu-label {
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  color: rgba(180,196,255,0.90);
+}
+.db-nav-menu-sub {
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+.db-nav-menu-item--danger:hover { background: rgba(255,59,92,0.10); }
+.db-nav-menu-item--danger .db-nav-menu-label { color: rgba(255,90,115,0.88); }
 .db-greeting { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em; color: rgba(255,255,255,0.22); }
 .db-greeting strong { color: rgba(79,91,213,0.80); }
 .db-greeting-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--indigo); }
@@ -1153,8 +1197,8 @@
   --cut: 7px;
   clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
 }
-.db-confirm-cancel:hover { color: rgba(180,196,255,0.88); border-color: rgba(79,91,213,0.38); box-shadow: inset 0 1px 0 rgba(130,150,255,0.12), 0 0 18px rgba(79,91,213,0.10), 0 3px 14px rgba(0,0,0,0.44); }
-.db-confirm-cancel:active { transform: scale(0.975); }
+.db-confirm-cancel:hover:not(:disabled) { color: rgba(180,196,255,0.88); border-color: rgba(79,91,213,0.38); box-shadow: inset 0 1px 0 rgba(130,150,255,0.12), 0 0 18px rgba(79,91,213,0.10), 0 3px 14px rgba(0,0,0,0.44); }
+.db-confirm-cancel:active:not(:disabled) { transform: scale(0.975); }
 .db-confirm-ok {
   position: relative; overflow: hidden;
   font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
@@ -1172,8 +1216,10 @@
   --cut: 7px;
   clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
 }
-.db-confirm-ok:hover { color: rgba(255,120,140,0.96); border-color: rgba(255,59,92,0.55); border-top-color: rgba(255,80,105,0.70); box-shadow: inset 0 1px 0 rgba(255,110,130,0.18), 0 0 24px rgba(255,59,92,0.16), 0 4px 18px rgba(0,0,0,0.46); }
-.db-confirm-ok:active { transform: scale(0.975); }
+.db-confirm-ok:hover:not(:disabled) { color: rgba(255,120,140,0.96); border-color: rgba(255,59,92,0.55); border-top-color: rgba(255,80,105,0.70); box-shadow: inset 0 1px 0 rgba(255,110,130,0.18), 0 0 24px rgba(255,59,92,0.16), 0 4px 18px rgba(0,0,0,0.46); }
+.db-confirm-ok:active:not(:disabled) { transform: scale(0.975); }
+.db-confirm-cancel:disabled,
+.db-confirm-ok:disabled { opacity: 0.45; cursor: not-allowed; }
 .db-integrations-panel {
   position: relative;
   display: flex; flex-direction: column; gap: 18px;
