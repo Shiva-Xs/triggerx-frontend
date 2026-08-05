@@ -687,7 +687,15 @@ export default function HeroScene({ authPhase, authInputPos, authMode = false, o
   const containerRef = useRef(null);
   const mouseRef     = useRef({ x: 0, y: 0 });
   const [isMobile,   setIsMobile]   = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
-  const [frameloop,  setFrameloop]  = useState('always');
+  const [onScreen,   setOnScreen]   = useState(true);
+  const [scrolling,  setScrolling]  = useState(false);
+  // Rendering this scene is by far the most expensive thing the page does per
+  // frame. While the user is actually scrolling it is also the least useful —
+  // the hero is on its way off screen — so the loop stops for the duration of
+  // the gesture and the canvas holds its last frame. That hands the whole
+  // frame budget to scrolling and compositing, which is what the user sees.
+  const frameloop = onScreen && !scrolling ? 'always' : 'never';
+
   useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handler);
@@ -700,18 +708,31 @@ export default function HeroScene({ authPhase, authInputPos, authMode = false, o
     if (!el) return;
     const io = new IntersectionObserver(([e]) => {
       const { screen, overlay } = getHeroVideos();
+      setOnScreen(e.isIntersecting);
       if (e.isIntersecting) {
-        setFrameloop('always');
         screen.play().catch(() => {});
         overlay.play().catch(() => {});
       } else {
-        setFrameloop('never');
         screen.pause();
         overlay.pause();
       }
     }, { threshold: 0 });
     io.observe(el);
     return () => io.disconnect();
+  }, [authMode]);
+
+  useEffect(() => {
+    if (authMode) return;
+    // Two state updates per gesture, not one per scroll event.
+    let idle;
+    let active = false;
+    const onScroll = () => {
+      if (!active) { active = true; setScrolling(true); }
+      clearTimeout(idle);
+      idle = setTimeout(() => { active = false; setScrolling(false); }, 140);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { clearTimeout(idle); window.removeEventListener('scroll', onScroll); };
   }, [authMode]);
 
   useEffect(() => {
