@@ -1,7 +1,7 @@
-import { lazy, Suspense, useEffect, useRef, useState, useCallback } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, useCallback, useSyncExternalStore } from 'react';
 import { Routes, Route, Navigate, useNavigate, Link } from 'react-router-dom';
-import { useProgress } from '@react-three/drei';
-import { _screenVideo, _overlayVideo } from './utils/videoLoader';
+import { subscribeScene, getSceneSnapshot } from './utils/sceneProgress';
+import { detectSceneSupport } from './utils/sceneSupport';
 import './App.css';
 
 import GrainLayer from './components/GrainLayer.jsx';
@@ -292,25 +292,23 @@ const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const PrivacyPage   = lazy(() => import('./pages/LegalPages').then(m => ({ default: m.PrivacyPage })));
 const TermsPage     = lazy(() => import('./pages/LegalPages').then(m => ({ default: m.TermsPage })));
 
+// Hard ceiling on the branded loader. Whatever the scene is still doing, the
+// page reveals itself by now — the loader must never be what defines LCP.
+const LOADER_MAX_MS = 2200;
+
 function SceneOverlay({ onReady }) {
-  const { progress, active } = useProgress();
-  const [videosReady, setVideosReady] = useState(false);
+  const { progress, firstFrame } = useSyncExternalStore(subscribeScene, getSceneSnapshot, getSceneSnapshot);
+  const [timedOut, setTimedOut] = useState(false);
   const [done, setDone] = useState(false);
   const [fading, setFading] = useState(false);
   const [gone, setGone] = useState(false);
 
   useEffect(() => {
-    const checkVideos = () => {
-      if (_screenVideo.readyState >= 3 && _overlayVideo.readyState >= 3) {
-        setVideosReady(true);
-      }
-    };
-    checkVideos();
-    const t = setInterval(checkVideos, 100);
-    return () => clearInterval(t);
+    const t = setTimeout(() => setTimedOut(true), LOADER_MAX_MS);
+    return () => clearTimeout(t);
   }, []);
 
-  const isLoaded = !active && progress >= 100 && videosReady;
+  const isLoaded = firstFrame || timedOut;
   const pct = isLoaded ? 100 : Math.min(Math.round(progress), 99);
 
   useEffect(() => {
@@ -361,7 +359,11 @@ function SceneOverlay({ onReady }) {
 
 function LandingPage() {
   const navRef = useRef();
-  const [heroReady, setHeroReady] = useState(false);
+  // Clients that cannot run the hero at a sane frame rate (no WebGL, CPU
+  // rasterizer, reduced-motion) never download the three.js chunk, the model,
+  // the environment map or the videos — they get the poster and are ready at once.
+  const [use3D] = useState(() => detectSceneSupport().ok);
+  const [heroReady, setHeroReady] = useState(!use3D);
   const [activeChannel, setActiveChannel] = useState(0);
 
   useEffect(() => { document.title = 'TriggerX | Free Crypto Price Alerts'; }, []);
@@ -373,11 +375,6 @@ function LandingPage() {
   };
 
   const handleHeroReady = useCallback(() => setHeroReady(true), []);
-
-  useEffect(() => {
-    const t = setTimeout(() => setHeroReady(true), 4000);
-    return () => clearTimeout(t);
-  }, []);
 
   useEffect(() => {
     const onScroll = () => navRef.current?.classList.toggle('nav--scrolled', window.scrollY > 60);
@@ -444,12 +441,31 @@ function LandingPage() {
 
       <section className="hero" id="hero" data-ready={heroReady}>
 
-        <SceneOverlay onReady={handleHeroReady} />
+        {use3D && <SceneOverlay onReady={handleHeroReady} />}
 
         <div className="hero-canvas-wrap">
-          <Suspense fallback={<div style={{ position: 'absolute', inset: 0, background: '#000' }} />}>
-            <HeroScene onReady={handleHeroReady} />
-          </Suspense>
+          {use3D ? (
+            <Suspense fallback={null}>
+              <HeroScene onReady={handleHeroReady} />
+            </Suspense>
+          ) : (
+            <>
+              <picture>
+                <source media="(max-width: 767px)" srcSet="/hero-poster-mobile.webp" width="645" height="1398" />
+                <img
+                  className="hero-poster"
+                  src="/hero-poster.webp"
+                  alt=""
+                  aria-hidden="true"
+                  width="1276"
+                  height="720"
+                  decoding="async"
+                  fetchPriority="high"
+                />
+              </picture>
+              <div className="hero-poster-vignette" aria-hidden="true" />
+            </>
+          )}
         </div>
 
         <div className="hero-vignette-left" />

@@ -1,4 +1,12 @@
-function _makePersistedVideo(src) {
+// Hero visor video textures.
+//
+// These used to be created (and .load()ed) at module scope, so importing the
+// module anywhere started ~13 MB of video downloads before first paint. They
+// are now created on demand, only once the WebGL hero has decided to mount.
+
+let videos = null;
+
+function makePersistedVideo(src) {
   const v = document.createElement('video');
   v.src = src;
   v.loop = true;
@@ -12,5 +20,12 @@ function _makePersistedVideo(src) {
   return v;
 }
 
-export const _screenVideo  = _makePersistedVideo('/screen.mp4');
-export const _overlayVideo = _makePersistedVideo('/overlay.mp4');
+export function getHeroVideos() {
+  if (!videos) {
+    videos = {
+      screen: makePersistedVideo('/screen.mp4'),
+      overlay: makePersistedVideo('/overlay.mp4'),
+    };
+  }
+  return videos;
+}

@@ -1,7 +1,8 @@
 import { useRef, useEffect, useState, useMemo, Suspense, Component } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useGLTF, Environment } from '@react-three/drei';
+import { useGLTF, Environment, useProgress } from '@react-three/drei';
 import * as THREE from 'three';
+import { reportScene } from '../utils/sceneProgress';
 
 function createCrypticTextTexture() {
 
@@ -76,7 +77,7 @@ function createCrypticTextTexture() {
   return { texture, updateTexture };
 }
 
-import { _screenVideo, _overlayVideo } from '../utils/videoLoader';
+import { getHeroVideos } from '../utils/videoLoader';
 
 function createVisorMaterial() {
 
@@ -105,8 +106,7 @@ function createVisorMaterial() {
   gradTex.magFilter = THREE.LinearFilter;
   gradTex.colorSpace = THREE.SRGBColorSpace;
 
-  const video = _screenVideo;
-  const videoOv = _overlayVideo;
+  const { screen: video, overlay: videoOv } = getHeroVideos();
   video.play().catch(() => {});
   videoOv.play().catch(() => {});
 
@@ -642,10 +642,22 @@ function SafeEnvironment() {
   return (
     <EnvironmentErrorBoundary>
       <Suspense fallback={null}>
-        <Environment files="/dikhololo_night_1k.hdr" background={false} blur={0.4} environmentIntensity={1.5} />
+        <Environment files="/env-night-256.hdr" background={false} blur={0.4} environmentIntensity={1.5} />
       </Suspense>
     </EnvironmentErrorBoundary>
   );
+}
+
+// Signals the landing page once the scene has actually put pixels on screen.
+// Two frames, so the reveal never uncovers a half-drawn first frame.
+function FirstFrameReporter() {
+  const frames = useRef(0);
+  useFrame(() => {
+    if (frames.current > 2) return;
+    frames.current += 1;
+    if (frames.current === 3) reportScene({ firstFrame: true });
+  });
+  return null;
 }
 
 function SceneSetup({ mouseRef, authPhase, authInputPos, authMode, isMobile }) {
@@ -656,8 +668,19 @@ function SceneSetup({ mouseRef, authPhase, authInputPos, authMode, isMobile }) {
       <SkullGrid isMobile={isMobile} />
       <SafeEnvironment />
       <SkullModel mouseRef={isMobile ? null : mouseRef} authPhase={authPhase} authInputPos={authInputPos} authMode={authMode} isMobile={isMobile} />
+      <FirstFrameReporter />
     </>
   );
+}
+
+// Mirrors drei's real asset-load progress into the drei-free store the landing
+// page reads, so the loader bar stays truthful without App.jsx importing drei.
+function ProgressBridge() {
+  const { progress, active } = useProgress();
+  useEffect(() => {
+    reportScene({ progress: active ? Math.min(progress, 99) : Math.max(progress, 0) });
+  }, [progress, active]);
+  return null;
 }
 
 export default function HeroScene({ authPhase, authInputPos, authMode = false, onReady }) {
@@ -676,14 +699,15 @@ export default function HeroScene({ authPhase, authInputPos, authMode = false, o
     const el = containerRef.current;
     if (!el) return;
     const io = new IntersectionObserver(([e]) => {
+      const { screen, overlay } = getHeroVideos();
       if (e.isIntersecting) {
         setFrameloop('always');
-        _screenVideo.play().catch(() => {});
-        _overlayVideo.play().catch(() => {});
+        screen.play().catch(() => {});
+        overlay.play().catch(() => {});
       } else {
         setFrameloop('never');
-        _screenVideo.pause();
-        _overlayVideo.pause();
+        screen.pause();
+        overlay.pause();
       }
     }, { threshold: 0 });
     io.observe(el);
@@ -709,6 +733,7 @@ export default function HeroScene({ authPhase, authInputPos, authMode = false, o
 
   return (
     <div className="hero-scene-container" ref={containerRef}>
+      <ProgressBridge />
       <Canvas
         frameloop={frameloop}
         camera={{ position: camPos, fov: 45, near: 0.1, far: 100 }}

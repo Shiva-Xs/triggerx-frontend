@@ -131,7 +131,7 @@ function LegalShell({ titleLine1, titleLine2, chipLabel, updated, active, childr
           </button>
       </nav>
 
-      <div style={S.wrap}>
+      <main style={S.wrap}>
         <div style={S.hero}>
           <div style={S.chip}><span style={S.chipDot} />{chipLabel}</div>
           <h1 style={S.h1}>{titleLine1}<br /><span style={S.h1x}>{titleLine2}</span></h1>
@@ -139,7 +139,7 @@ function LegalShell({ titleLine1, titleLine2, chipLabel, updated, active, childr
           <div style={S.divider} />
         </div>
         {children}
-      </div>
+      </main>
 
       <footer style={S.foot}>
         <span style={S.footCopy}>&copy; {new Date().getFullYear()} TRIGGERX &nbsp;·&nbsp; No ads &nbsp;·&nbsp; No tracking</span>

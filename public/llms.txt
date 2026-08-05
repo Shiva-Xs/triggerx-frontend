@@ -1,0 +1,29 @@
+# TriggerX
+
+> Free real-time crypto price alerts. Set a price target on any Binance Spot pair
+> and get an email or Telegram notification the moment the market crosses it.
+
+TriggerX watches the live Binance WebSocket feed around the clock, so no browser
+tab has to stay open. Alerts support three conditions (above, below, crosses),
+can be written in plain English such as "ETH below 2500" or "BTC up 10%", and
+fire exactly once before moving to history. Sign-in is a one-time email code —
+there is no password. Alerts are best-effort and are not a substitute for
+exchange-native stop-loss or limit orders.
+
+## Pages
+
+- [Home](https://www.triggerx.in/): Product overview, features, integrations and FAQ.
+- [Sign in](https://www.triggerx.in/auth): Email one-time-code sign-in, no password.
+- [Dashboard](https://www.triggerx.in/dashboard): Create and manage alerts. Requires sign-in.
+- [Privacy Policy](https://www.triggerx.in/privacy): What is stored and why.
+- [Terms of Service](https://www.triggerx.in/terms): Terms of use, including alert-reliability limits.
+
+## Docs
+
+- [Backend source](https://github.com/Shiva-Xs/triggerx-backend): Open-source service that runs the price feed and alert engine.
+
+## Notes
+
+- Covers every active USDT trading pair on Binance, refreshed automatically.
+- Delivery channels: email, the @TriggerX_AlertBot Telegram bot, and a Chrome extension.
+- Limit of 50 active alerts per account. Free, with no ads, trackers or analytics.

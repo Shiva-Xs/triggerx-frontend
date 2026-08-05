@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TriggerX | Free Crypto Price Alerts</title>
@@ -34,15 +34,12 @@
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://www.triggerx.in/" />
     <link rel="manifest" href="/manifest.json" />
-    <link rel="preload" href="/hero.glb" as="fetch" crossorigin>
-    <link rel="preload" href="/draco/draco_decoder.wasm" as="fetch" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@700;900&family=Playfair+Display:ital,wght@1,700&family=Space+Grotesk:wght@300;400;500;600;700&display=block" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@700;900&family=Playfair+Display:ital,wght@1,700&family=Space+Grotesk:wght@300;400;500;600;700&display=block" rel="stylesheet"></noscript>
-    <link rel="preconnect" href="https://fonts.bunny.net" />
-    <link rel="preload" href="https://fonts.bunny.net/css?family=syne:400,500,600,700,800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link href="https://fonts.bunny.net/css?family=syne:400,500,600,700,800&display=swap" rel="stylesheet"></noscript>
+    <!-- Fonts are self-hosted variable subsets (see src/index.css): one file per
+         family, same-origin, font-display:swap. These three carry every glyph
+         above the fold, so they are preloaded to keep first paint from swapping. -->
+    <link rel="preload" href="/fonts/bebas-neue.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin />
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",

@@ -109,7 +109,15 @@ function LiveChart() {
       PT = Math.max(160, H * 0.26); PB = Math.max(90, H * 0.15); PL = 40; PR = 76;
       svgEl?.setAttribute('viewBox', `0 0 ${W} ${H}`);
       const cr = $('clip-rect');
-      if (cr) { cr.setAttribute('x', PL); cr.setAttribute('y', PT - 4); cr.setAttribute('width', W - PL - PR + 4); cr.setAttribute('height', H - PT - PB + 8); }
+      if (cr) {
+        // On the first layout pass root has no size yet, so the raw arithmetic
+        // yields negative width/height, which the SVG spec rejects (and Chrome
+        // logs as an error). Clamp instead of emitting an invalid clip path.
+        cr.setAttribute('x', PL);
+        cr.setAttribute('y', Math.max(0, PT - 4));
+        cr.setAttribute('width', Math.max(0, W - PL - PR + 4));
+        cr.setAttribute('height', Math.max(0, H - PT - PB + 8));
+      }
     }
 
     let prices = [], timestamps = [], livePrice = 0, displayPrice = 0;
@@ -440,7 +448,7 @@ export default function AuthPage() {
   const goBack = () => { setPhase('email'); setOtpMsg(''); setOtpMsgType(''); setShakeId(0); };
 
   return (
-    <div className="auth-split">
+    <main className="auth-split">
       <GrainLayer zIndex={5} />
 
       <div className="as-left">
@@ -635,6 +643,6 @@ export default function AuthPage() {
         <LiveChart />
       </div>
 
-    </div>
+    </main>
   );
 }

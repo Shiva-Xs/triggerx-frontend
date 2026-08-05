@@ -145,6 +145,30 @@
   inset: 0;
   contain: layout style;
 }
+/* Shown instead of the WebGL hero on clients that cannot render it well. */
+.hero-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 46%;
+  pointer-events: none;
+  user-select: none;
+}
+/* Matches the edge falloff HeroScene draws over its canvas, so the poster
+   composites into the section exactly like the live scene does. */
+.hero-poster-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background:
+    linear-gradient(to right, rgba(10, 10, 15, 0.88) 0%, transparent 20%),
+    linear-gradient(to left, rgba(10, 10, 15, 0.88) 0%, transparent 20%),
+    linear-gradient(to bottom, rgba(10, 10, 15, 0.85) 0%, transparent 20%),
+    linear-gradient(to top, rgba(10, 10, 15, 0.85) 0%, transparent 20%);
+}
 .hero:not([data-ready="true"]) .hero-left,
 .hero:not([data-ready="true"]) .hero-right,
 .hero:not([data-ready="true"]) .hero-vignette-left,
@@ -612,7 +636,7 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(79, 91, 213, 0.60);
+  color: var(--indigo-text);
   min-width: 60px;
   text-align: center;
   animation: fadeIn 0.4s ease 0.3s both;
@@ -639,7 +663,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--indigo);
+  color: var(--indigo-text);
   margin-bottom: 12px;
   opacity: 1;
   text-shadow: 0 0 18px rgba(79, 91, 213, 0.70), 0 0 40px rgba(79, 91, 213, 0.30);
@@ -2165,7 +2189,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--indigo);
+  color: var(--indigo-text);
   text-shadow: 0 0 18px rgba(79, 91, 213, 0.70), 0 0 40px rgba(79, 91, 213, 0.30);
   margin-bottom: var(--space-xl);
   display: flex;
@@ -2254,9 +2278,9 @@
   letter-spacing: 0.04em;
 }
 .principles-list .principle-link {
-  color: rgba(79, 91, 213, 0.80);
+  color: var(--indigo-text);
   text-decoration: none;
-  border-bottom: 1px solid rgba(79, 91, 213, 0.30);
+  border-bottom: 1px solid rgba(122, 133, 232, 0.40);
   transition: color 0.2s, border-color 0.2s;
 }
 .principles-list .principle-link:hover {
@@ -2294,9 +2318,9 @@
   color: rgba(255, 255, 255, 0.75);
 }
 .principle-link {
-  color: rgba(79, 91, 213, 0.8);
+  color: var(--indigo-text);
   text-decoration: none;
-  border-bottom: 1px solid rgba(79, 91, 213, 0.3);
+  border-bottom: 1px solid rgba(122, 133, 232, 0.40);
 }
 .principle-link:hover {
   color: var(--text-primary);
@@ -4805,7 +4829,7 @@
   border-left: 2px solid transparent;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   background: transparent;
-  color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.50);
   text-align: left;
   width: 100%;
   user-select: none;
@@ -4816,7 +4840,7 @@
 }
 .feat-pill:hover {
   background: rgba(255, 255, 255, 0.022);
-  color: rgba(255, 255, 255, 0.50);
+  color: rgba(255, 255, 255, 0.68);
 }
 .feat-pill--indigo.feat-pill--active {
   background: rgba(79, 91, 213, 0.09);
@@ -4889,7 +4913,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 0;
   background: transparent;
-  color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.50);
   transition: background 0.18s ease, border-left-color 0.18s ease, color 0.18s ease;
   flex: 1;
   width: 100%;
@@ -4899,7 +4923,7 @@
 }
 .ch-panel-wrap .feat-pill:hover {
   background: rgba(255, 255, 255, 0.025);
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.68);
 }
 .ch-panel-wrap .feat-pill-label {
   font-size: 11px;
@@ -6854,7 +6878,7 @@
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.10em;
-  color: rgba(79, 91, 213, 0.88);
+  color: var(--indigo-text);
   position: relative;
   z-index: 2;
   box-shadow: 0 0 0 4px rgba(79, 91, 213, 0.06);
@@ -6906,7 +6930,7 @@
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(79, 91, 213, 0.70);
+  color: var(--indigo-text);
   padding-top: 9px;
   margin-bottom: var(--space-sm);
 }
@@ -6934,7 +6958,7 @@
   font-size: 13.5px;
   font-weight: 300;
   line-height: 1.75;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.55);
   max-width: none;
   margin: 0;
   transition: color 0.25s;
