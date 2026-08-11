@@ -1290,6 +1290,11 @@
   text-transform: uppercase;
   margin-bottom: 6px;
 }
+/* Second label in the same flex column, so it needs air above it to read as a
+   new group rather than another nav item. */
+.footer-col-label--guides {
+  margin-top: 18px;
+}
 .footer-link {
   font-family: var(--font-mono);
   font-size: 11px;

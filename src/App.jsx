@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState, useCallback, useSyncExternalStore } from 'react';
-import { Routes, Route, Navigate, useNavigate, Link } from 'react-router-dom';
+import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 import { subscribeScene, getSceneSnapshot } from './utils/sceneProgress';
 import { detectSceneSupport } from './utils/sceneSupport';
 import './App.css';
@@ -291,6 +291,7 @@ const AuthPage      = lazy(() => import('./pages/AuthPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const PrivacyPage   = lazy(() => import('./pages/LegalPages').then(m => ({ default: m.PrivacyPage })));
 const TermsPage     = lazy(() => import('./pages/LegalPages').then(m => ({ default: m.TermsPage })));
+const NotFoundPage  = lazy(() => import('./pages/NotFoundPage'));
 
 // Hard ceiling on the branded loader. Whatever the scene is still doing, the
 // page reveals itself by now — the loader must never be what defines LCP.
@@ -775,6 +776,18 @@ function LandingPage() {
               <Link to="/privacy" state={{ from: '/' }} className="footer-nav-link">Privacy</Link>
               <Link to="/terms"   state={{ from: '/' }} className="footer-nav-link">Terms</Link>
               <a href="https://github.com/Shiva-Xs/triggerx-backend" target="_blank" rel="noopener noreferrer" className="footer-nav-link">GitHub ↗</a>
+
+              {/* The guide pages are standalone HTML documents under public/,
+                  not routes in this Router — so these must stay plain <a> tags.
+                  A <Link> would be intercepted client-side, find no matching
+                  route, and land on NotFoundPage.
+                  They also need to be linked from somewhere: the sitemap alone
+                  leaves them orphaned, which is a slow crawl and a weak one. */}
+              <div className="footer-col-label footer-col-label--guides">GUIDES</div>
+              <a href="/bitcoin-price-alerts" className="footer-nav-link">Bitcoin Alerts</a>
+              <a href="/ethereum-price-alerts" className="footer-nav-link">Ethereum Alerts</a>
+              <a href="/telegram-crypto-price-alerts" className="footer-nav-link">Telegram Alerts</a>
+              <a href="/crypto-price-alerts-without-signup" className="footer-nav-link">Alerts Without a Password</a>
             </nav>
 
           </div>
@@ -826,7 +839,14 @@ export default function App() {
           <TermsPage />
         </Suspense>
       } />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* Was <Navigate to="/" replace/>, which turned every junk URL into a
+          200 that rendered the homepage — a duplicate as far as a crawler is
+          concerned. NotFoundPage sets noindex instead. */}
+      <Route path="*" element={
+        <Suspense fallback={<div style={{ background: '#010106', height: '100vh' }} />}>
+          <NotFoundPage />
+        </Suspense>
+      } />
     </Routes>
   );
 }

@@ -7,6 +7,8 @@
 
 The official web frontend for **TriggerX** — a real-time cryptocurrency price alerting platform for Binance Spot trading pairs. Built with React 19, Vite, Three.js 3D landing visuals, live WebSocket price streaming, and a high-performance Cyberpunk aesthetic UI.
 
+**Live:** [www.triggerx.in](https://www.triggerx.in) · **Backend:** [triggerx-backend](https://github.com/Shiva-Xs/triggerx-backend)
+
 ---
 
 ## Key Features

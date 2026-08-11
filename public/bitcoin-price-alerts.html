@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#020208">
+  <title>Bitcoin Price Alerts - Free BTC Alert by Email or Telegram | TriggerX</title>
+  <meta name="description" content="Set a free Bitcoin price alert and get an email or Telegram message the second BTC crosses your target. Percentage moves supported. No password, no app to install.">
+  <meta name="robots" content="index, follow">
+  <meta name="keywords" content="bitcoin price alert, btc price alert, bitcoin price notification, btc alert telegram, free bitcoin alert, bitcoin price target alert">
+  <link rel="canonical" href="https://www.triggerx.in/bitcoin-price-alerts">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <meta property="og:title" content="Bitcoin Price Alerts - Free BTC Alert by Email or Telegram">
+  <meta property="og:description" content="Get an email or Telegram message the second BTC crosses your target. Percentage moves supported.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.triggerx.in/bitcoin-price-alerts">
+  <meta property="og:site_name" content="TriggerX">
+  <meta property="og:image" content="https://www.triggerx.in/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bitcoin Price Alerts - Free BTC Alert by Email or Telegram">
+  <meta name="twitter:description" content="Get an email or Telegram message the second BTC crosses your target.">
+  <meta name="twitter:image" content="https://www.triggerx.in/og-image.png">
+  <link rel="stylesheet" href="/guide.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I set a Bitcoin price alert?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sign in with an emailed one-time code, pick BTCUSDT, and name a price with a direction: above, below, or crosses. You can also type it in plain English, for example BTC above 90000, and the target is parsed for you."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I get an alert for a percentage move in BTC instead of a price?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Describe the move rather than the level, for example BTC up 10%. TriggerX reads the live price at the moment you create the alert, works out the resulting target, and arms the alert at that number."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How fast does a Bitcoin alert arrive?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Prices stream from Binance over a WebSocket rather than being polled, so a crossing is detected within the same second. Telegram delivery is close to instant; email typically lands within a few seconds."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need to keep a browser tab open?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Monitoring runs server-side, so you can close everything after arming the alert and still be notified."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <a class="brand" href="/">TRIGGER<i>X</i></a>
+      <nav>
+        <a href="/">Set an alert</a>
+        <a href="https://github.com/Shiva-Xs/triggerx-backend">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <p class="eyebrow">Guide</p>
+      <h1>Bitcoin price alerts</h1>
+      <p class="lede">
+        Name a BTC price, pick a direction, and get an email or Telegram message the moment the market
+        crosses it. Free, and there is no password to create.
+      </p>
+
+      <p>
+        Bitcoin is the pair people most often want an alert on and the one where waiting at a chart is least
+        practical, because the level you care about is usually hours or days away. TriggerX watches
+        <code>BTCUSDT</code> on the live Binance feed and notifies you when your condition is met, once.
+      </p>
+
+      <div class="cta-row">
+        <a class="cta" href="/">Set a BTC alert &rarr;</a>
+      </div>
+
+      <h2>Three ways to describe the level</h2>
+      <ul>
+        <li><strong>Above</strong> — fires when BTC trades over your number. For watching a breakout level.</li>
+        <li><strong>Below</strong> — fires when BTC trades under it. For watching a support level you care about.</li>
+        <li><strong>Crosses</strong> — fires from either direction, so one alert covers both sides of a level instead of two.</li>
+      </ul>
+
+      <h2>Or just say the move</h2>
+      <p>
+        If you do not have an exact number in mind, describe the move instead: <code>BTC up 10%</code>.
+        TriggerX reads the live price when you create the alert, computes the target from it, and arms the
+        alert at that figure. <strong>The percentage is resolved once, at creation time</strong> — it is a
+        shortcut for arithmetic, not a trailing alert that keeps re-basing as the price moves.
+      </p>
+      <p>
+        Plain-English input works for absolute levels too, so <code>BTC above 90000</code> and
+        <code>BTC below 70000</code> are both parsed without touching a form.
+      </p>
+
+      <h2>How delivery works</h2>
+      <ol class="steps">
+        <li><strong>Sign in with email.</strong> A one-time code, no password to invent or store.</li>
+        <li><strong>Arm the alert.</strong> Pick BTCUSDT and a condition, or type it in plain English.</li>
+        <li><strong>Close the tab.</strong> Monitoring is server-side, so nothing needs to stay open.</li>
+        <li><strong>Get notified once.</strong> Email or Telegram fires on the crossing, then the alert deactivates and moves to your history.</li>
+      </ol>
+
+      <h2>Why one notification</h2>
+      <p>
+        A price that hovers around a level will cross it repeatedly, and an alerting tool that fires on every
+        crossing becomes noise you learn to ignore. TriggerX deactivates an alert after it fires, so you get
+        exactly one message per condition. If you want to keep watching the same level, arm it again.
+      </p>
+
+      <div class="note">
+        <p>
+          TriggerX is built to inform, not to replace your trading safeguards. No alert service can guarantee
+          delivery every time — network interruptions, exchange feed delays and downtime can all make a
+          notification late or missed. For risk that actually matters, use exchange-native stop-losses or
+          limit orders, which execute without depending on you reading a message.
+        </p>
+      </div>
+
+      <h2>Questions</h2>
+      <div class="faq">
+        <div class="faq-item">
+          <h3>How do I set a Bitcoin price alert?</h3>
+          <p>Sign in with an emailed one-time code, pick BTCUSDT, and name a price with a direction: above, below, or crosses. You can also type it in plain English, for example <code>BTC above 90000</code>, and the target is parsed for you.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I get an alert for a percentage move in BTC instead of a price?</h3>
+          <p>Yes. Describe the move rather than the level, for example <code>BTC up 10%</code>. TriggerX reads the live price at the moment you create the alert, works out the resulting target, and arms the alert at that number.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How fast does a Bitcoin alert arrive?</h3>
+          <p>Prices stream from Binance over a WebSocket rather than being polled, so a crossing is detected within the same second. Telegram delivery is close to instant; email typically lands within a few seconds.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do I need to keep a browser tab open?</h3>
+          <p>No. Monitoring runs server-side, so you can close everything after arming the alert and still be notified.</p>
+        </div>
+      </div>
+
+      <h2>Keep reading</h2>
+      <div class="related">
+        <a href="/ethereum-price-alerts">Ethereum price alerts<span>The same setup for ETH</span></a>
+        <a href="/telegram-crypto-price-alerts">Crypto alerts in Telegram<span>Manage everything from one chat</span></a>
+        <a href="/crypto-price-alerts-without-signup">Alerts without a password<span>How sign-in works here</span></a>
+      </div>
+    </main>
+
+    <footer class="foot">
+      <a href="/">TriggerX</a>
+      <a href="/bitcoin-price-alerts">Bitcoin</a>
+      <a href="/ethereum-price-alerts">Ethereum</a>
+      <a href="/telegram-crypto-price-alerts">Telegram</a>
+      <a href="/crypto-price-alerts-without-signup">No password</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+    </footer>
+  </div>
+</body>
+</html>

@@ -239,48 +239,76 @@
         @keyframes splashUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
         @keyframes splashFade{from{opacity:0}to{opacity:1}}
       </style>
-    </div>
-    <noscript>
-      <div style="background:#000;color:#fff;font-family:sans-serif;padding:40px 20px;max-width:800px;margin:0 auto">
+
+      <!-- Static content shell. This is the only copy of the landing text that
+           reaches the served HTML: everything past the splash is rendered by
+           React, and the lazy 3D hero pushes that render deep into Googlebot's
+           deferred render queue. It lives inside #root on purpose, so
+           createRoot() replaces it wholesale when React mounts and it never
+           coexists with the real UI. Splash is fixed/opaque/z-9999, so it
+           covers this during the pre-mount window.
+           This previously sat in <noscript>, which was close to useless: the
+           JS-enabled crawler ignores noscript outright and the raw-HTML pass
+           discounts it. Moving it here also makes the FAQPage JSON-LD above
+           valid, since that requires its question text on the page.
+           Keep the copy in sync with src/App.jsx — divergence reads as
+           cloaking. -->
+      <div id="seo-shell" style="background:#000;color:#fff;font-family:sans-serif;padding:40px 20px;max-width:800px;margin:0 auto">
         <h1>TriggerX - Free Real-Time Crypto Price Alerts for Binance</h1>
-        <p>TriggerX sends instant email and Telegram alerts the moment your Binance price target is hit. Set crypto price alerts for Bitcoin (BTC), Ethereum (ETH), Solana (SOL) and 400+ trading pairs - completely free, open source, no password needed.</p>
-        <h2>Features</h2>
+        <p>Set a price alert on any crypto available on Binance Spot and get notified the instant the market hits your target. TriggerX sends instant email and Telegram alerts for Bitcoin (BTC), Ethereum (ETH), Solana (SOL) and 400+ trading pairs - completely free, open source, no password needed. 400+ pairs, under 2 second latency, $0 always.</p>
+        <h2>Five things, done perfectly</h2>
+        <h3>Live price monitoring</h3>
+        <p>Prices stream live from Binance over WebSocket. Every active USDT pair, from BTC to hundreds of altcoins, updates in under one second, continuously, 24/7. TriggerX watches them all so you never have to.</p>
+        <h3>Three alert conditions</h3>
+        <p>Alert when a price goes above your target, drops below it, or crosses it from either direction. The crosses condition watches both sides so you don't need two separate alerts.</p>
+        <h3>Set alerts in plain English</h3>
+        <p>No forms. Just type it: "ETH below 2500" or "BTC up 10%". TriggerX parses the intent and arms the alert automatically.</p>
+        <h3>Percentage-based alerts</h3>
+        <p>Don't know the exact price? Just say the move. "Alert me when BTC is up 10%." TriggerX reads the live price, works out the target, and sets the alert for you. No math required.</p>
+        <h3>One alert, one notification</h3>
+        <p>When your condition is met, you get notified once. No repeated pings, no duplicates. The alert deactivates cleanly after it fires and moves to your history.</p>
+        <h2>Alerts reach you, no new app required</h2>
         <ul>
-          <li>Live price monitoring for 400+ Binance USDT pairs with under 1-second latency</li>
-          <li>Three alert conditions: Above, Below, and Crosses</li>
-          <li>Set alerts in plain English - just type "ETH below 2500" or "BTC up 10%"</li>
-          <li>Percentage-based alerts - say the move, not the exact price</li>
-          <li>One alert, one notification - no spam, no duplicates</li>
+          <li><strong>Email alerts</strong> - fires the instant your condition is met. The subject line alone tells you what happened. No app, no login, no extra setup.</li>
+          <li><strong>Telegram bot alerts</strong> - link once to @TriggerX_AlertBot and manage everything from one chat thread, by command or plain English. Supports /add, /list, /history, /price and /deleteall.</li>
+          <li><strong>Chrome extension</strong> - auto-reads the trading pair from your open Binance or TradingView tab so you can arm an alert without retyping the symbol.</li>
         </ul>
-        <h2>Delivery Channels</h2>
-        <ul>
-          <li>Email alerts - fires within seconds, full alert in subject line</li>
-          <li>Telegram bot alerts - manage everything from one chat thread via @TriggerX_AlertBot</li>
-          <li>Chrome Extension - auto-detects the trading pair from your Binance or TradingView tab</li>
-        </ul>
-        <h2>How It Works</h2>
+        <h2>Sixty seconds to your first alert</h2>
         <ol>
-          <li>Sign in with email - verify a one-time code, no password</li>
-          <li>Set your alert - pick a pair, name a price level, or describe it in plain English</li>
-          <li>TriggerX watches 24/7 - monitors the live Binance feed every second</li>
-          <li>Get notified instantly - via Email or Telegram the moment your target is hit</li>
+          <li><strong>Sign in with email</strong> - verify a one-time code, no password to create or remember.</li>
+          <li><strong>Set your alert</strong> - pick any USDT pair, name a price level and direction, or describe it in plain English. TriggerX arms it instantly.</li>
+          <li><strong>We watch 24/7</strong> - TriggerX monitors the live Binance feed every second around the clock. No tab to keep open, no refresh needed.</li>
+          <li><strong>Delivered instantly</strong> - the moment your condition is met, a notification fires via Email or Telegram. One alert, then silence.</li>
         </ol>
-        <h2>Frequently Asked Questions</h2>
+        <h2>Common questions</h2>
         <dl>
           <dt>How fast are alerts?</dt>
-          <dd>Prices stream live from Binance. Notifications go out within the same second your target is crossed.</dd>
+          <dd>Prices stream live from Binance with no polling delay. When a price crosses your target the notification goes out within the same second. Telegram is nearly instant. Email typically arrives within a few seconds.</dd>
+          <dt>Can I rely on TriggerX for critical trades?</dt>
+          <dd>TriggerX is designed to be fast and reliable, but no alert service can guarantee delivery 100% of the time. Network interruptions, exchange feed delays, or unexpected downtime can occasionally cause a notification to fire late or be missed. Always use exchange-native stop-losses or limit orders for risk that matters. TriggerX is built to inform, not to replace your trading safeguards.</dd>
           <dt>What coins are supported?</dt>
-          <dd>Every active USDT trading pair on Binance - hundreds of coins, updated automatically.</dd>
+          <dd>Every active USDT trading pair on Binance, hundreds of coins. The list updates automatically every few hours so new listings are picked up without any action from you.</dd>
           <dt>Is it free?</dt>
-          <dd>Completely free and open source. No credit card, no trial, no hidden tier.</dd>
+          <dd>Completely free and open source. No credit card, no trial, no hidden tier. The code is on GitHub and will stay that way.</dd>
           <dt>Do I need to keep a tab open?</dt>
-          <dd>No. TriggerX runs on our servers. Set an alert, close everything.</dd>
-          <dt>How many alerts can I set?</dt>
-          <dd>50 active alerts per account.</dd>
+          <dd>No. TriggerX runs on our servers, not your browser. Set an alert, close everything. You'll get notified the moment the condition is met.</dd>
+          <dt>How many alerts can I set at once?</dt>
+          <dd>50 active alerts per account. That covers every serious trading setup. If you need more, reach out.</dd>
         </dl>
+        <h2>Guides</h2>
+        <ul>
+          <li><a href="/bitcoin-price-alerts">Bitcoin price alerts</a> - set a BTC target by price or percentage move</li>
+          <li><a href="/ethereum-price-alerts">Ethereum price alerts</a> - bracket a range on ETH with multiple levels</li>
+          <li><a href="/telegram-crypto-price-alerts">Crypto price alerts in Telegram</a> - the bot commands and how linking works</li>
+          <li><a href="/crypto-price-alerts-without-signup">Crypto alerts without a password</a> - what the service does and does not ask for</li>
+        </ul>
         <p><a href="https://github.com/Shiva-Xs/triggerx-backend">View source on GitHub</a> · <a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Service</a></p>
       </div>
-    </noscript>
+    </div>
+    <!-- Without JS the splash is never torn down, because React is what removes
+         it - it would sit there as a full-screen black overlay forever. Hiding
+         it here makes #seo-shell what a no-JS visitor actually sees. -->
+    <noscript><style>#splash-loader{display:none!important}</style></noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

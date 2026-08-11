@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#020208">
+  <title>Ethereum Price Alerts - Free ETH Alert by Email or Telegram | TriggerX</title>
+  <meta name="description" content="Set a free Ethereum price alert and get notified the second ETH crosses your target. Email or Telegram, percentage moves supported, no password required.">
+  <meta name="robots" content="index, follow">
+  <meta name="keywords" content="ethereum price alert, eth price alert, ethereum price notification, eth alert telegram, free ethereum alert, eth price target alert">
+  <link rel="canonical" href="https://www.triggerx.in/ethereum-price-alerts">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <meta property="og:title" content="Ethereum Price Alerts - Free ETH Alert by Email or Telegram">
+  <meta property="og:description" content="Get notified the second ETH crosses your target. Email or Telegram, percentage moves supported.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.triggerx.in/ethereum-price-alerts">
+  <meta property="og:site_name" content="TriggerX">
+  <meta property="og:image" content="https://www.triggerx.in/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ethereum Price Alerts - Free ETH Alert by Email or Telegram">
+  <meta name="twitter:description" content="Get notified the second ETH crosses your target.">
+  <meta name="twitter:image" content="https://www.triggerx.in/og-image.png">
+  <link rel="stylesheet" href="/guide.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I set an Ethereum price alert?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sign in with an emailed one-time code, choose ETHUSDT, and give a price plus a direction: above, below, or crosses. Plain English also works, for example ETH below 2500."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I alert on an ETH percentage move?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Type something like ETH up 8% and the live price at creation time is used to compute the target. The percentage is resolved once when the alert is armed rather than trailing the price."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I watch ETH and other pairs at the same time?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, up to 50 active alerts per account across any supported pairs. Each alert is independent, so ETH can have several levels armed at once."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which Ethereum pair is used for the price?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ETHUSDT on Binance Spot. Every active USDT pair on Binance is supported, and the tradable list refreshes automatically so new listings appear without any action from you."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <a class="brand" href="/">TRIGGER<i>X</i></a>
+      <nav>
+        <a href="/">Set an alert</a>
+        <a href="https://github.com/Shiva-Xs/triggerx-backend">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <p class="eyebrow">Guide</p>
+      <h1>Ethereum price alerts</h1>
+      <p class="lede">
+        Pick an ETH level, pick a direction, and TriggerX messages you the moment the market crosses it —
+        by email, Telegram, or both.
+      </p>
+
+      <p>
+        TriggerX watches <code>ETHUSDT</code> on the live Binance Spot feed. You can arm several ETH levels
+        at once, which is the usual reason people want alerts on Ethereum rather than just Bitcoin: there is
+        often more than one number worth knowing about.
+      </p>
+
+      <div class="cta-row">
+        <a class="cta" href="/">Set an ETH alert &rarr;</a>
+      </div>
+
+      <h2>Multiple levels, one pair</h2>
+      <p>
+        Each alert is independent, and you can hold up to <strong>50 active alerts per account</strong>. In
+        practice that means you can bracket a range — one <code>below</code> alert underneath and one
+        <code>above</code> alert on top — and hear about whichever side resolves first, without the two
+        interfering.
+      </p>
+      <p>
+        If you would rather cover both sides of a single level with one alert, use <code>crosses</code>,
+        which fires from either direction.
+      </p>
+
+      <h2>Percentage moves</h2>
+      <p>
+        <code>ETH up 8%</code> is a valid alert. The live price is read when you arm it, the target is
+        computed from that, and the alert sits at the resulting number. This saves the arithmetic when what
+        you actually care about is the size of the move rather than a specific figure.
+      </p>
+      <p>
+        Because the percentage resolves at creation time, an alert armed at a different moment produces a
+        different target. It is a convenience for setting a level, not a trailing stop.
+      </p>
+
+      <h2>Where alerts arrive</h2>
+      <ul>
+        <li><strong>Email</strong> — the subject line alone tells you what happened, so you do not have to open it.</li>
+        <li><strong>Telegram</strong> — link once to <code>@TriggerX_AlertBot</code> and alerts land in that chat, where you can also add and list alerts by command.</li>
+        <li><strong>Chrome extension</strong> — reads the pair from an open Binance or TradingView tab so you can arm an ETH alert without retyping the symbol.</li>
+      </ul>
+
+      <h2>Coverage beyond ETH</h2>
+      <p>
+        Every active USDT pair on Binance is supported, several hundred of them, and the list refreshes on a
+        schedule so newly listed coins become available without any action from you. The same conditions and
+        plain-English input work identically on any of them.
+      </p>
+
+      <div class="note">
+        <p>
+          TriggerX is built to inform, not to replace your trading safeguards. No alert service can guarantee
+          delivery every time — network interruptions, exchange feed delays and downtime can all make a
+          notification late or missed. For risk that actually matters, use exchange-native stop-losses or
+          limit orders, which execute without depending on you reading a message.
+        </p>
+      </div>
+
+      <h2>Questions</h2>
+      <div class="faq">
+        <div class="faq-item">
+          <h3>How do I set an Ethereum price alert?</h3>
+          <p>Sign in with an emailed one-time code, choose ETHUSDT, and give a price plus a direction: above, below, or crosses. Plain English also works, for example <code>ETH below 2500</code>.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I alert on an ETH percentage move?</h3>
+          <p>Yes. Type something like <code>ETH up 8%</code> and the live price at creation time is used to compute the target. The percentage is resolved once when the alert is armed rather than trailing the price.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I watch ETH and other pairs at the same time?</h3>
+          <p>Yes, up to 50 active alerts per account across any supported pairs. Each alert is independent, so ETH can have several levels armed at once.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Which Ethereum pair is used for the price?</h3>
+          <p>ETHUSDT on Binance Spot. Every active USDT pair on Binance is supported, and the tradable list refreshes automatically so new listings appear without any action from you.</p>
+        </div>
+      </div>
+
+      <h2>Keep reading</h2>
+      <div class="related">
+        <a href="/bitcoin-price-alerts">Bitcoin price alerts<span>The same setup for BTC</span></a>
+        <a href="/telegram-crypto-price-alerts">Crypto alerts in Telegram<span>Manage everything from one chat</span></a>
+        <a href="/crypto-price-alerts-without-signup">Alerts without a password<span>How sign-in works here</span></a>
+      </div>
+    </main>
+
+    <footer class="foot">
+      <a href="/">TriggerX</a>
+      <a href="/bitcoin-price-alerts">Bitcoin</a>
+      <a href="/ethereum-price-alerts">Ethereum</a>
+      <a href="/telegram-crypto-price-alerts">Telegram</a>
+      <a href="/crypto-price-alerts-without-signup">No password</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+    </footer>
+  </div>
+</body>
+</html>

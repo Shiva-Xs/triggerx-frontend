@@ -1,0 +1,181 @@
+/* Shared stylesheet for the standalone guide pages under public/.
+   These are real HTML documents rather than SPA routes, on purpose: the app is
+   a client-rendered Vite bundle with a lazy three.js hero, so a React route
+   could not carry its own <title>/description/canonical into the served HTML
+   without adding a prerender step. Static files give each page correct meta
+   and crawlable copy for the cost of one small sheet.
+   Palette and fonts mirror src/index.css. */
+
+@font-face {
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/bebas-neue.woff2') format('woff2-variations');
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk.woff2') format('woff2-variations');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono.woff2') format('woff2-variations');
+}
+
+:root {
+  --bg: #010106;
+  --ind: #4F5BD5;
+  --t1: rgba(255, 255, 255, 0.92);
+  --t2: rgba(255, 255, 255, 0.60);
+  --t3: rgba(255, 255, 255, 0.35);
+  --br: rgba(79, 91, 213, 0.20);
+  --disp: 'Bebas Neue', Impact, sans-serif;
+  --body: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--t1);
+  font-family: var(--body);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ambient wash, same idea as the app's aurora layer */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(79, 91, 213, 0.16) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 30% at 0% 60%, rgba(41, 121, 255, 0.06) 0%, transparent 50%);
+}
+
+.wrap { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 0 24px 96px; }
+
+/* header */
+.top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 0 64px;
+}
+.brand {
+  font-family: var(--disp); font-size: 22px; letter-spacing: 0.08em;
+  color: var(--t1); text-decoration: none; display: flex; align-items: baseline;
+}
+.brand i { color: var(--ind); font-style: normal; }
+.top nav { display: flex; gap: 20px; }
+.top nav a {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--t3); text-decoration: none;
+}
+.top nav a:hover { color: var(--t1); }
+
+/* type */
+.eyebrow {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--ind); margin: 0 0 18px;
+}
+h1 {
+  font-family: var(--disp); font-weight: 400;
+  font-size: clamp(40px, 8vw, 72px); line-height: 1.02;
+  letter-spacing: 0.01em; margin: 0 0 22px; text-transform: uppercase;
+}
+.lede { font-size: 18px; line-height: 1.7; color: var(--t2); margin: 0 0 38px; }
+h2 {
+  font-family: var(--disp); font-weight: 400; text-transform: uppercase;
+  font-size: clamp(26px, 4.5vw, 38px); line-height: 1.1; letter-spacing: 0.02em;
+  margin: 56px 0 14px;
+}
+h3 {
+  font-family: var(--mono); font-weight: 600; font-size: 12px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--t1);
+  margin: 30px 0 8px;
+}
+p { margin: 0 0 20px; color: var(--t2); }
+p strong { color: var(--t1); font-weight: 500; }
+a { color: var(--t1); text-decoration: underline; text-decoration-color: var(--br); }
+a:hover { text-decoration-color: var(--ind); }
+ul, ol { color: var(--t2); padding-left: 22px; margin: 0 0 20px; }
+li { margin-bottom: 10px; }
+li strong { color: var(--t1); font-weight: 500; }
+code {
+  font-family: var(--mono); font-size: 13px;
+  background: rgba(79, 91, 213, 0.12); padding: 2px 6px;
+  color: var(--t1);
+}
+
+/* call to action */
+.cta {
+  display: inline-block;
+  font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.16em;
+  text-transform: uppercase; text-decoration: none;
+  color: #fff; background: var(--ind);
+  padding: 14px 28px;
+  box-shadow: 0 0 24px rgba(79, 91, 213, 0.35);
+}
+.cta:hover { background: #5f6ae0; }
+.cta-row { margin: 38px 0 8px; }
+
+/* steps */
+.steps { counter-reset: s; list-style: none; padding: 0; }
+.steps li {
+  counter-increment: s; position: relative; padding-left: 42px; margin-bottom: 18px;
+}
+.steps li::before {
+  content: counter(s, decimal-leading-zero);
+  position: absolute; left: 0; top: 2px;
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  color: var(--ind); letter-spacing: 0.1em;
+}
+
+/* faq */
+.faq { margin-top: 14px; border-top: 1px solid var(--br); }
+.faq-item { border-bottom: 1px solid var(--br); padding: 22px 0; }
+.faq-item h3 { margin: 0 0 8px; }
+.faq-item p { margin: 0; }
+
+/* related */
+.related { display: grid; gap: 2px; margin-top: 14px; }
+.related a {
+  display: block; padding: 18px 20px; text-decoration: none;
+  background: rgba(79, 91, 213, 0.07); color: var(--t1); font-size: 15px;
+  border-left: 1px solid transparent;
+}
+.related a:hover { background: rgba(79, 91, 213, 0.13); border-left-color: var(--ind); }
+.related span {
+  display: block; font-family: var(--mono); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--t3); margin-top: 4px;
+}
+
+/* risk note */
+.note {
+  border-left: 2px solid var(--ind); padding: 4px 0 4px 18px; margin: 28px 0;
+}
+.note p { margin: 0; font-size: 15px; color: var(--t2); }
+
+/* footer */
+.foot {
+  margin-top: 68px; padding-top: 26px; border-top: 1px solid var(--br);
+  font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--t3);
+  display: flex; flex-wrap: wrap; gap: 18px;
+}
+.foot a { color: var(--t3); text-decoration: none; }
+.foot a:hover { color: var(--t1); }
+
+@media (max-width: 600px) {
+  .wrap { padding: 0 20px 72px; }
+  .top { padding: 18px 0 42px; }
+  .lede { font-size: 17px; }
+}

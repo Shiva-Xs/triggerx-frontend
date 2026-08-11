@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#020208">
+  <title>Crypto Price Alerts Without a Password - No App, No Account Sprawl | TriggerX</title>
+  <meta name="description" content="No password to create, no app to install, no card. Verify an email with a one-time code and set crypto price alerts on 400+ Binance pairs. Free and open source.">
+  <meta name="robots" content="index, follow">
+  <meta name="keywords" content="crypto price alert no signup, crypto alerts without password, passwordless crypto alert, free crypto alert no account, crypto price alert no app">
+  <link rel="canonical" href="https://www.triggerx.in/crypto-price-alerts-without-signup">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <meta property="og:title" content="Crypto Price Alerts Without a Password">
+  <meta property="og:description" content="No password to create, no app to install, no card. Just a one-time code to your email.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.triggerx.in/crypto-price-alerts-without-signup">
+  <meta property="og:site_name" content="TriggerX">
+  <meta property="og:image" content="https://www.triggerx.in/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Crypto Price Alerts Without a Password">
+  <meta name="twitter:description" content="No password to create, no app to install, no card.">
+  <meta name="twitter:image" content="https://www.triggerx.in/og-image.png">
+  <link rel="stylesheet" href="/guide.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Do I need to create an account to set a crypto price alert?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You need to verify an email address with a one-time code, because that address is where alerts are delivered. There is no password to create, no profile to fill in and no card required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is there no password?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A password would only protect a list of price alerts, while creating a credential that can be reused, leaked or forgotten. Sending a one-time code to the address that already receives the alerts gives the same assurance without storing a secret."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I have to install an app?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Alerts arrive by email or Telegram, both of which you almost certainly already have. There is an optional Chrome extension, but nothing needs to be installed for alerts to work."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is it actually free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, with no paid tier and no card at any point. The backend is open source on GitHub."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <a class="brand" href="/">TRIGGER<i>X</i></a>
+      <nav>
+        <a href="/">Set an alert</a>
+        <a href="https://github.com/Shiva-Xs/triggerx-backend">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <p class="eyebrow">Guide</p>
+      <h1>Crypto alerts without a password</h1>
+      <p class="lede">
+        There is no password to create, no app to install and no card at any point. What there is: a
+        one-time code sent to your email, because that address is where the alerts go.
+      </p>
+
+      <p>
+        Worth being precise, since this is the thing people actually want to know before starting.
+        <strong>You do verify an email address.</strong> You do not create a password, fill in a profile,
+        confirm a phone number, or hand over payment details. The email is not an account formality — it is
+        the delivery channel, so the service needs a working one either way.
+      </p>
+
+      <div class="cta-row">
+        <a class="cta" href="/">Set an alert &rarr;</a>
+      </div>
+
+      <h2>Why passwordless</h2>
+      <p>
+        A password on a service like this protects a list of price levels. That is not nothing, but it is
+        not worth much either — and in exchange it creates a credential you have to invent, a hash the
+        service has to store, and one more entry in a password manager.
+      </p>
+      <p>
+        Sending a one-time code to the address that already receives your alerts gets to the same place:
+        whoever controls that inbox controls the alerts, which was already true the moment alerts started
+        arriving there. Removing the password removes a liability without weakening anything meaningful.
+      </p>
+
+      <h2>What you never hand over</h2>
+      <ul>
+        <li><strong>No password</strong> — nothing to invent, store or rotate.</li>
+        <li><strong>No card</strong> — there is no paid tier, so payment details are never requested.</li>
+        <li><strong>No exchange keys.</strong> TriggerX reads public market data from Binance. It never asks for API keys and cannot place, cancel or view orders.</li>
+        <li><strong>No app install</strong> — email and Telegram are the delivery channels; the Chrome extension is optional.</li>
+      </ul>
+
+      <h2>The exchange-key point matters</h2>
+      <p>
+        Plenty of portfolio and alerting tools ask you to connect an exchange account with API keys. That is
+        a much larger trust decision than it looks, because those keys are a standing grant to something
+        outside the exchange.
+      </p>
+      <p>
+        An alerting service does not need them. Prices are public data, so TriggerX watches the public
+        Binance feed and has no read or write access to your account whatsoever. The most it ever knows
+        about you is an email address and a list of price levels.
+      </p>
+
+      <h2>Getting started</h2>
+      <ol class="steps">
+        <li><strong>Enter your email.</strong> A one-time code arrives.</li>
+        <li><strong>Type the code.</strong> That is the entire sign-in.</li>
+        <li><strong>Arm an alert.</strong> Pick a pair and a level, or type it in plain English.</li>
+        <li><strong>Close the tab.</strong> Monitoring runs server-side.</li>
+      </ol>
+
+      <div class="note">
+        <p>
+          TriggerX is built to inform, not to replace your trading safeguards. No alert service can guarantee
+          delivery every time — network interruptions, exchange feed delays and downtime can all make a
+          notification late or missed. For risk that actually matters, use exchange-native stop-losses or
+          limit orders, which execute without depending on you reading a message.
+        </p>
+      </div>
+
+      <h2>Questions</h2>
+      <div class="faq">
+        <div class="faq-item">
+          <h3>Do I need to create an account to set a crypto price alert?</h3>
+          <p>You need to verify an email address with a one-time code, because that address is where alerts are delivered. There is no password to create, no profile to fill in and no card required.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Why is there no password?</h3>
+          <p>A password would only protect a list of price alerts, while creating a credential that can be reused, leaked or forgotten. Sending a one-time code to the address that already receives the alerts gives the same assurance without storing a secret.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do I have to install an app?</h3>
+          <p>No. Alerts arrive by email or Telegram, both of which you almost certainly already have. There is an optional Chrome extension, but nothing needs to be installed for alerts to work.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is it actually free?</h3>
+          <p>Yes, with no paid tier and no card at any point. The backend is open source on GitHub.</p>
+        </div>
+      </div>
+
+      <h2>Keep reading</h2>
+      <div class="related">
+        <a href="/bitcoin-price-alerts">Bitcoin price alerts<span>Levels and percentage moves on BTC</span></a>
+        <a href="/ethereum-price-alerts">Ethereum price alerts<span>Bracketing a range on ETH</span></a>
+        <a href="/telegram-crypto-price-alerts">Crypto alerts in Telegram<span>Manage everything from one chat</span></a>
+      </div>
+    </main>
+
+    <footer class="foot">
+      <a href="/">TriggerX</a>
+      <a href="/bitcoin-price-alerts">Bitcoin</a>
+      <a href="/ethereum-price-alerts">Ethereum</a>
+      <a href="/telegram-crypto-price-alerts">Telegram</a>
+      <a href="/crypto-price-alerts-without-signup">No password</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+    </footer>
+  </div>
+</body>
+</html>
