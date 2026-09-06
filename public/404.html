@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#010106">
+  <title>Page not found | TriggerX</title>
+  <meta name="description" content="That page does not exist on TriggerX.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="stylesheet" href="/guide.css">
+  <style>
+    .nf {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .nf-aurora {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(79,91,213,0.16) 0%, transparent 55%);
+    }
+    .nf > * { position: relative; z-index: 1; }
+    .nf-code {
+      font-family: var(--disp);
+      font-size: clamp(72px, 16vw, 160px);
+      line-height: 1;
+      letter-spacing: 0.02em;
+      color: var(--ind);
+      text-shadow: 0 0 24px rgba(79,91,213,0.35);
+    }
+    .nf-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--t3);
+      margin-top: 4px;
+    }
+    .nf-title {
+      font-family: var(--disp);
+      font-size: clamp(28px, 6vw, 44px);
+      letter-spacing: 0.04em;
+      margin: 20px 0 0;
+    }
+    .nf-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--t2);
+      max-width: 440px;
+      margin: 14px 0 0;
+    }
+    .nf-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 30px; }
+    .nf-btn {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ind);
+      text-decoration: none;
+      border: 1px solid var(--br);
+      padding: 11px 22px;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+    .nf-btn:hover { border-color: var(--ind); color: var(--t1); }
+    .nf-links {
+      margin-top: 46px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      max-width: 460px;
+      width: 100%;
+    }
+    .nf-links-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--t3);
+      margin-bottom: 14px;
+    }
+    .nf-links ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+    .nf-links a {
+      font-size: 14px;
+      color: var(--t2);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+    .nf-links a:hover { color: var(--t1); border-bottom-color: var(--br); }
+  </style>
+</head>
+<body>
+  <div class="nf-aurora" aria-hidden="true"></div>
+  <main class="nf">
+    <div class="nf-code">404</div>
+    <div class="nf-label">Page not found</div>
+    <h1 class="nf-title">This page does not exist</h1>
+    <p class="nf-desc">
+      The address may be mistyped, or the page may have moved.
+      Your alerts are unaffected.
+    </p>
+
+    <div class="nf-actions">
+      <a class="nf-btn" href="/">Back to TriggerX</a>
+      <a class="nf-btn" href="/dashboard">Open dashboard</a>
+    </div>
+
+    <nav class="nf-links" aria-label="Guides">
+      <div class="nf-links-label">Guides</div>
+      <ul>
+        <li><a href="/bitcoin-price-alerts">Bitcoin price alerts</a></li>
+        <li><a href="/ethereum-price-alerts">Ethereum price alerts</a></li>
+        <li><a href="/telegram-crypto-price-alerts">Crypto alerts in Telegram</a></li>
+        <li><a href="/crypto-price-alerts-without-signup">Alerts without a password</a></li>
+      </ul>
+    </nav>
+  </main>
+</body>
+</html>

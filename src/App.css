@@ -1176,6 +1176,14 @@
   align-items: flex-end;
   gap: 9px;
 }
+/* One column of the NAVIGATE / GUIDES pair. */
+.footer-col-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  min-width: 0;
+}
 .footer-logo {
   font-family: var(--font-display);
   font-size: 30px;
@@ -1290,10 +1298,34 @@
   text-transform: uppercase;
   margin-bottom: 6px;
 }
-/* Second label in the same flex column, so it needs air above it to read as a
-   new group rather than another nav item. */
+/* NAVIGATE and GUIDES are now separate columns, each with its label on top, so
+   the old spacer that separated two labels stacked in one column is gone. */
 .footer-col-label--guides {
-  margin-top: 18px;
+  margin-top: 0;
+}
+
+/* Oversized closing wordmark. Sized off the viewport so it spans the footer at
+   any width, and kept low-contrast so it reads as a graphic rather than
+   competing with the links above it. */
+.footer-wordmark {
+  margin: clamp(40px, 7vw, 84px) 0 clamp(16px, 2vw, 28px);
+  font-family: var(--font-display);
+  font-size: clamp(72px, 19vw, 280px);
+  line-height: 0.82;
+  letter-spacing: -0.01em;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+}
+.footer-wordmark-trigger {
+  color: rgba(255, 255, 255, 0.07);
+}
+.footer-wordmark-x {
+  color: rgba(79, 91, 213, 0.30);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .footer-wordmark-trigger { color: rgba(255, 255, 255, 0.12); }
 }
 .footer-link {
   font-family: var(--font-mono);
@@ -4336,8 +4368,14 @@
   .features-grid--9 {
     grid-template-columns: 1fr;
   }
+  /* Was display:none. These are the only internal links to the four guide
+     pages, and Google crawls mobile-first — hiding them here meant the crawl
+     that decides indexing saw the guides as orphans. */
   .footer-cols-right {
-    display: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
   }
   .footer-particles {
     left: 50%;
@@ -4448,15 +4486,15 @@
     flex-direction: column;
     gap: 24px;
   }
-  .footer-right {
-    display: none;
-  }
-  .footer-col-label {
-    display: none;
-  }
+  /* .footer-right is the legacy single-column wrapper, no longer rendered.
+     .footer-cols-right and its labels stay visible at every width: these are
+     the guide pages' only internal links, and the mobile crawl is the one that
+     counts for indexing. */
   .footer-cols-right {
-    flex-direction: column;
-    gap: var(--space-xl);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
   }
   .footer {
     padding: 0 0 24px;

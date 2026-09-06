@@ -767,29 +767,50 @@ function LandingPage() {
               <p className="footer-disclaimer-line">Alerts are best-effort and not guaranteed. Do not rely solely on TriggerX for trading decisions or risk management.</p>
             </div>
 
-            <nav className="footer-right">
-              <div className="footer-col-label">NAVIGATE</div>
-              <a href="#features" className="footer-nav-link">Features</a>
-              <a href="#integrations" className="footer-nav-link">Integrations</a>
-              <a href="#how-it-works" className="footer-nav-link">How It Works</a>
-              <a href="#faq" className="footer-nav-link">FAQ</a>
-              <Link to="/privacy" state={{ from: '/' }} className="footer-nav-link">Privacy</Link>
-              <Link to="/terms"   state={{ from: '/' }} className="footer-nav-link">Terms</Link>
-              <a href="https://github.com/Shiva-Xs/triggerx-backend" target="_blank" rel="noopener noreferrer" className="footer-nav-link">GitHub ↗</a>
+            {/* Two columns side by side rather than one stacked list. Stacked,
+                these eleven links made the footer roughly twice as tall as it
+                needed to be. */}
+            <div className="footer-cols-right">
+
+              <nav className="footer-col-nav" aria-label="Site sections">
+                <div className="footer-col-label">NAVIGATE</div>
+                <a href="#features" className="footer-nav-link">Features</a>
+                <a href="#integrations" className="footer-nav-link">Integrations</a>
+                <a href="#how-it-works" className="footer-nav-link">How It Works</a>
+                <a href="#faq" className="footer-nav-link">FAQ</a>
+                <Link to="/privacy" state={{ from: '/' }} className="footer-nav-link">Privacy</Link>
+                <Link to="/terms"   state={{ from: '/' }} className="footer-nav-link">Terms</Link>
+                <a href="https://github.com/Shiva-Xs/triggerx-backend" target="_blank" rel="noopener noreferrer" className="footer-nav-link">GitHub ↗</a>
+              </nav>
 
               {/* The guide pages are standalone HTML documents under public/,
                   not routes in this Router — so these must stay plain <a> tags.
                   A <Link> would be intercepted client-side, find no matching
                   route, and land on NotFoundPage.
                   They also need to be linked from somewhere: the sitemap alone
-                  leaves them orphaned, which is a slow crawl and a weak one. */}
-              <div className="footer-col-label footer-col-label--guides">GUIDES</div>
-              <a href="/bitcoin-price-alerts" className="footer-nav-link">Bitcoin Alerts</a>
-              <a href="/ethereum-price-alerts" className="footer-nav-link">Ethereum Alerts</a>
-              <a href="/telegram-crypto-price-alerts" className="footer-nav-link">Telegram Alerts</a>
-              <a href="/crypto-price-alerts-without-signup" className="footer-nav-link">Alerts Without a Password</a>
-            </nav>
+                  leaves them orphaned, which is a slow crawl and a weak one.
+                  These links must also stay visible at every width. Google
+                  indexes mobile-first, and this column used to be display:none
+                  under 768px — so on the crawl that counts, the guide pages had
+                  no internal links at all. All six sat in "Discovered —
+                  currently not indexed". */}
+              <nav className="footer-col-nav" aria-label="Guides">
+                <div className="footer-col-label">GUIDES</div>
+                <a href="/bitcoin-price-alerts" className="footer-nav-link">Bitcoin Alerts</a>
+                <a href="/ethereum-price-alerts" className="footer-nav-link">Ethereum Alerts</a>
+                <a href="/telegram-crypto-price-alerts" className="footer-nav-link">Telegram Alerts</a>
+                <a href="/crypto-price-alerts-without-signup" className="footer-nav-link">Alerts Without a Password</a>
+              </nav>
 
+            </div>
+
+          </div>
+
+          {/* Oversized wordmark as the closing beat of the page. Decorative:
+              the accessible brand name is already in .footer-logo above, so
+              this is hidden from assistive tech rather than read out twice. */}
+          <div className="footer-wordmark" aria-hidden="true">
+            <span className="footer-wordmark-trigger">TRIGGER</span><span className="footer-wordmark-x">X</span>
           </div>
 
           <div className="footer-bottom">
