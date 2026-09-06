@@ -1304,29 +1304,6 @@
   margin-top: 0;
 }
 
-/* Oversized closing wordmark. Sized off the viewport so it spans the footer at
-   any width, and kept low-contrast so it reads as a graphic rather than
-   competing with the links above it. */
-.footer-wordmark {
-  margin: clamp(40px, 7vw, 84px) 0 clamp(16px, 2vw, 28px);
-  font-family: var(--font-display);
-  font-size: clamp(72px, 19vw, 280px);
-  line-height: 0.82;
-  letter-spacing: -0.01em;
-  text-align: center;
-  white-space: nowrap;
-  user-select: none;
-  pointer-events: none;
-}
-.footer-wordmark-trigger {
-  color: rgba(255, 255, 255, 0.07);
-}
-.footer-wordmark-x {
-  color: rgba(79, 91, 213, 0.30);
-}
-@media (prefers-reduced-transparency: reduce) {
-  .footer-wordmark-trigger { color: rgba(255, 255, 255, 0.12); }
-}
 .footer-link {
   font-family: var(--font-mono);
   font-size: 11px;

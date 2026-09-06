@@ -806,13 +806,6 @@ function LandingPage() {
 
           </div>
 
-          {/* Oversized wordmark as the closing beat of the page. Decorative:
-              the accessible brand name is already in .footer-logo above, so
-              this is hidden from assistive tech rather than read out twice. */}
-          <div className="footer-wordmark" aria-hidden="true">
-            <span className="footer-wordmark-trigger">TRIGGER</span><span className="footer-wordmark-x">X</span>
-          </div>
-
           <div className="footer-bottom">
             <div className="footer-bottom-row">
               <span className="footer-bottom-text">© {new Date().getFullYear()} TRIGGERX</span>
