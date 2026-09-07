@@ -31,9 +31,25 @@ const SPA_ROUTES = [
   /^\/terms\/?$/,
 ];
 
+/**
+ * The apex served the whole site at 200 alongside www, so the two were separate copies of
+ * every page held together only by a canonical tag - a hint, not a directive. The sitemap and
+ * robots.txt already commit to www, and the API's CORS allow-list only contains www, so a
+ * visitor who typed the bare domain got a site whose every API call failed with a 403.
+ *
+ * Matched on the exact host. "contains" would match www.triggerx.in too and loop forever.
+ */
+const APEX = 'triggerx.in';
+const CANONICAL_HOST = 'www.triggerx.in';
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.hostname === APEX) {
+      url.hostname = CANONICAL_HOST;
+      return Response.redirect(url.toString(), 301);
+    }
 
     if (SPA_ROUTES.some((route) => route.test(url.pathname))) {
       // Ask for "/" rather than "/index.html". The asset handler normalises an
