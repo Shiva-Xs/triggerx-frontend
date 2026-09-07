@@ -32,6 +32,11 @@ const SPA_ROUTES = [
 ];
 
 /**
+ * Runs ahead of the asset handler (assets.run_worker_first in wrangler.json). Without that, a
+ * request matching a real file - "/" matches index.html - is served by the asset layer and this
+ * Worker is never invoked, so the hostname check below would never run. _redirects cannot do it
+ * either: Workers Assets rejects absolute source URLs ("Only relative URLs are allowed").
+ *
  * The apex served the whole site at 200 alongside www, so the two were separate copies of
  * every page held together only by a canonical tag - a hint, not a directive. The sitemap and
  * robots.txt already commit to www, and the API's CORS allow-list only contains www, so a
@@ -48,6 +53,9 @@ export default {
 
     if (url.hostname === APEX) {
       url.hostname = CANONICAL_HOST;
+      // Pinned rather than inherited: a redirect is a fresh request, and sending the reader to
+      // http:// would cost an extra hop even with HSTS in front.
+      url.protocol = 'https:';
       return Response.redirect(url.toString(), 301);
     }
 

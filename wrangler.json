@@ -3,10 +3,13 @@
   "name": "triggerx-frontend",
   "main": "worker.js",
   "compatibility_date": "2026-08-11",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "assets": {
     "directory": "dist",
     "binding": "ASSETS",
-    "not_found_handling": "404-page"
+    "not_found_handling": "404-page",
+    "run_worker_first": true
   }
 }
