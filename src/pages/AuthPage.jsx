@@ -120,28 +120,75 @@ function LiveChart() {
       }
     }
 
+    /** One point per minute. The axis labels and the "15M" period badge both assume this. */
+    const WINDOW_POINTS = 15;
+    const BUCKET_MS = 60000;
+    const bucketOf = ms => Math.floor(ms / BUCKET_MS) * BUCKET_MS;
+
     let prices = [], timestamps = [], livePrice = 0, displayPrice = 0;
     let allHigh = -Infinity, allLow = Infinity, openPrice = 0;
-    let animRaf = null, wsDelay = 1500, ws = null, prevPrice = 0, histLoaded = false;
+    let animRaf = null, wsDelay = 1500, ws = null, prevPrice = 0;
 
-    function seed() {
-      let s = Date.now() % 99999;
-      const rng = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
-      let sp = 67000;
-      for (let i = 0; i < 15; i++) { sp += (rng() > 0.48 ? 1 : -1) * (rng() * 18 + 3); prices.push(sp); }
-      timestamps = Array.from({ length: 15 }, (_, i) => Date.now() - (15 - i) * 60000);
-      livePrice = displayPrice = prices[prices.length - 1];
-      openPrice = prices[0]; allHigh = Math.max(...prices); allLow = Math.min(...prices);
+    /**
+     * Builds the window out of one known price, for when the klines request cannot be
+     * reached at all.
+     *
+     * The fallback this replaces invented a 15-point random walk from a hardcoded 67000.
+     * The live tick then overwrote only the final point, so the chart drew a flat line at
+     * a price BTC has not traded at in years with a single vertical spike on the end, and
+     * reported the gap between the two as a 21.83% move. A flat line at the real price is
+     * honest about knowing nothing before now, and cannot manufacture a move.
+     *
+     * It ASSIGNS both arrays. The old one pushed into prices while reassigning timestamps,
+     * so calling it twice - once on mount, once from the fetch's catch - left 30 prices
+     * against 15 timestamps. That mismatch is what printed the same time twice on the axis.
+     */
+    function seedFrom(price) {
+      const end = bucketOf(Date.now());
+      timestamps = Array.from({ length: WINDOW_POINTS }, (_, i) => end - (WINDOW_POINTS - 1 - i) * BUCKET_MS);
+      prices = timestamps.map(() => price);
+      livePrice = displayPrice = price;
+      if (!openPrice) openPrice = price;
+      allHigh = allHigh === -Infinity ? price : Math.max(allHigh, price);
+      allLow = allLow === Infinity ? price : Math.min(allLow, price);
+    }
+
+    /**
+     * Advances the window one minute at a time, so it keeps meaning "the last 15 minutes"
+     * however long the tab stays open. Ticks inside the current minute update its point;
+     * the first tick of a new minute appends one and drops the oldest.
+     *
+     * This is the only thing allowed to change either array's length, and it always changes
+     * both together: the axis reads one timestamp per point, and the two drifting apart is
+     * the failure this shape exists to make impossible.
+     */
+    function pushPrice(price) {
+      if (!prices.length) { seedFrom(price); return; }
+      if (bucketOf(Date.now()) > timestamps[timestamps.length - 1]) {
+        timestamps.push(bucketOf(Date.now())); prices.push(price);
+        while (prices.length > WINDOW_POINTS) { prices.shift(); timestamps.shift(); }
+      } else {
+        prices[prices.length - 1] = price;
+      }
     }
 
     async function fetchHistory() {
       try {
-        const data = await (await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=15')).json();
-        if (!Array.isArray(data) || !data.length) throw 0;
-        prices = data.map(k => parseFloat(k[4])); timestamps = data.map(k => +k[0]);
-        livePrice = displayPrice = prices[prices.length - 1]; openPrice = prices[0];
-        allHigh = Math.max(...prices); allLow = Math.min(...prices); histLoaded = true; draw();
-      } catch (_) { seed(); draw(); }
+        const res = await fetch(`https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=${WINDOW_POINTS}`);
+        if (!res.ok) throw 0;
+        const data = await res.json();
+        if (!Array.isArray(data) || data.length < 2) throw 0;
+        prices = data.map(k => parseFloat(k[4]));
+        timestamps = data.map(k => bucketOf(+k[0]));
+        livePrice = displayPrice = prices[prices.length - 1];
+        if (!openPrice) openPrice = prices[0];
+        allHigh = Math.max(...prices); allLow = Math.min(...prices);
+        draw();
+      } catch (_) {
+        // Nothing is drawn from thin air. If a tick has already arrived the window starts
+        // flat at that price; otherwise the first tick builds it, in pushPrice.
+        if (livePrice) { seedFrom(livePrice); draw(); }
+      }
     }
 
     function buildPath(pts) {
@@ -175,11 +222,15 @@ function LiveChart() {
         ye.appendChild(tx);
       }
       const bl = document.createElementNS(ns, 'line'); bl.setAttribute('x1', cx0()); bl.setAttribute('y1', cy1()); bl.setAttribute('x2', cx1()); bl.setAttribute('y2', cy1()); bl.setAttribute('stroke', 'rgba(255,255,255,0.06)'); bl.setAttribute('stroke-width', '1'); ge.appendChild(bl);
-      if (timestamps.length) {
-        const total = pts.length, cw = cx1() - cx0();
-        [0, Math.floor(total * 0.25), Math.floor(total * 0.5), Math.floor(total * 0.75), total - 1].forEach(idx => {
-          const x = cx0() + (idx / (total - 1)) * cw, isNow = idx === total - 1;
-          const ts = timestamps[Math.min(idx, timestamps.length - 1)], d = new Date(ts);
+      // One timestamp per point, so an index means the same thing on both axes. The clamp
+      // that used to stand in for this check quietly mapped several x positions onto the
+      // last timestamp whenever the arrays disagreed, which is how the same time was drawn
+      // twice. Set() also collapses ticks that round together on a short window.
+      if (timestamps.length === pts.length && pts.length > 1) {
+        const total = pts.length, cw = cx1() - cx0(), last = total - 1;
+        [...new Set([0, Math.round(last * 0.25), Math.round(last * 0.5), Math.round(last * 0.75), last])].forEach(idx => {
+          const x = cx0() + (idx / last) * cw, isNow = idx === last;
+          const d = new Date(timestamps[idx]);
           const label = isNow ? 'NOW' : d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
           const tk = document.createElementNS(ns, 'line'); tk.setAttribute('x1', x.toFixed(1)); tk.setAttribute('y1', cy1().toFixed(1)); tk.setAttribute('x2', x.toFixed(1)); tk.setAttribute('y2', (cy1() + 5).toFixed(1)); tk.setAttribute('stroke', 'rgba(255,255,255,0.1)'); tk.setAttribute('stroke-width', '1'); xe.appendChild(tk);
           const tl = document.createElementNS(ns, 'text'); tl.setAttribute('x', x.toFixed(1)); tl.setAttribute('y', (cy1() + 18).toFixed(1)); tl.setAttribute('fill', isNow ? 'rgba(0,229,160,0.55)' : 'rgba(255,255,255,0.18)'); tl.setAttribute('font-family', 'Geist Mono, monospace'); tl.setAttribute('font-size', '9'); tl.setAttribute('text-anchor', 'middle'); tl.setAttribute('letter-spacing', '0.07em'); tl.textContent = label; xe.appendChild(tl);
@@ -188,8 +239,12 @@ function LiveChart() {
     }
 
     function draw() {
-      if (!W) return;
-      const arr = [...prices]; if (arr.length) arr[arr.length - 1] = livePrice;
+      // Needs a laid-out box AND at least two points. Removing the synthetic seed means
+      // draw() can now fire before any price exists - on the first layout pass, or from
+      // the ResizeObserver - and buildPath returns an empty d for a single point, which
+      // made the fill start with "L" and the SVG parser reject the whole path.
+      if (!W || prices.length < 2) return;
+      const arr = prices;
       const { d, last } = buildPath(arr);
       const fill = d + ` L ${last[0].toFixed(1)},${cy1()} L ${cx0()},${cy1()} Z`;
       $('s-fill')?.setAttribute('d', fill); $('s-line')?.setAttribute('d', d);
@@ -217,7 +272,7 @@ function LiveChart() {
       livePrice = price;
       if (price > allHigh) allHigh = price;
       if (allLow === Infinity || price < allLow) allLow = price;
-      if (histLoaded && prices.length) prices[prices.length - 1] = price;
+      pushPrice(price);
       const ref = openPrice || prices[0] || price, diff = price - ref, pct = ((diff / ref) * 100).toFixed(2);
       const ce = $('chg-lbl');
       if (ce) { ce.textContent = `${diff >= 0 ? '▲' : '▼'} ${Math.abs(pct)}%`; ce.className = `as-r-chg ${diff >= 0 ? 'up' : 'dn'}`; }
@@ -248,7 +303,9 @@ function LiveChart() {
             if (hEl) hEl.textContent = '$' + h.toLocaleString('en-US', { maximumFractionDigits: 0 });
             if (lEl) lEl.textContent = '$' + l.toLocaleString('en-US', { maximumFractionDigits: 0 });
             if (vEl) vEl.textContent = '$' + v.toFixed(2) + 'B';
-            if (!openPrice) openPrice = parseFloat(msg.o);
+            // The 24h open, refreshed as it rolls, so the percentage next to the price
+            // means the same thing as the 24H high and low printed beside it.
+            const o = parseFloat(msg.o); if (o > 0) openPrice = o;
             allHigh = h; allLow = l;
           }
         } catch (_) {}
@@ -258,7 +315,7 @@ function LiveChart() {
     }
     function schedRecon() { setTimeout(() => { wsDelay = Math.min(wsDelay * 1.5, 30000); connect(); }, wsDelay); }
 
-    setDims(); seed(); draw(); fetchHistory(); connect();
+    setDims(); fetchHistory(); connect();
     const ro = window.ResizeObserver ? new ResizeObserver(() => { setDims(); draw(); }) : null;
     ro?.observe(root);
 
