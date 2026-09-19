@@ -28,7 +28,49 @@ const _bus = {
   listeners: new Map(),
   last: new Map(),
   reconnectTimer: null,
+  attempts: 0,
+  lastMsgAt: 0,
 };
+
+/** A stream this quiet is dead: miniTicker pushes about once a second. */
+const STALE_MS = 30000;
+
+/**
+ * Binance closes a stream every 24h by design, and a dropped network or a
+ * slept machine closes it sooner. There used to be no retry, so the first
+ * close of any kind froze every price at its last tick until a reload -
+ * indistinguishable, on screen, from the feed never having connected.
+ *
+ * Backoff is capped at 30s and jittered, so a Binance-side restart does not
+ * bring every open tab back in the same instant.
+ */
+function _busReconnectDelay() {
+  const ceiling = Math.min(1000 * 2 ** _bus.attempts, 30000);
+  return ceiling * (0.5 + Math.random() * 0.5);
+}
+
+/**
+ * Timers are throttled in a background tab and stopped outright on a sleeping
+ * machine, so the backoff alone can leave a returning reader looking at a
+ * stale price for as long as the pending timer takes to fire. Returning to the
+ * tab, or to the network, retries at once instead.
+ *
+ * The staleness check is what makes this worth having: a socket killed by
+ * sleep often sits half-open, readyState OPEN with nothing arriving and no
+ * close event, which a null check on _bus.ws alone would read as healthy.
+ */
+function _busWake() {
+  if (_bus.symbols.size === 0) return;
+  if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+  if (_bus.ws && Date.now() - _bus.lastMsgAt < STALE_MS) return;
+  _bus.attempts = 0;
+  _busConnect();
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('online', _busWake);
+  document.addEventListener('visibilitychange', _busWake);
+}
 
 function _busConnect() {
   clearTimeout(_bus.reconnectTimer);
@@ -37,14 +79,28 @@ function _busConnect() {
   const streams = [..._bus.symbols].map(s => `${s.toLowerCase()}@miniTicker`).join('/');
   const ws = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${streams}`);
   _bus.ws = ws;
+  // Counts as fresh from the attempt, not the first message, so a socket still
+  // opening is not judged stale by _busWake and torn down mid-handshake.
+  _bus.lastMsgAt = Date.now();
   ws.onerror = () => {};
-  ws.onclose = () => { if (_bus.ws === ws) _bus.ws = null; };
+  ws.onopen = () => { if (_bus.ws === ws) _bus.attempts = 0; };
+  ws.onclose = () => {
+    // A socket _busConnect itself replaced: _bus.ws already points at the new
+    // one, and scheduling a retry here would fight it.
+    if (_bus.ws !== ws) return;
+    _bus.ws = null;
+    if (_bus.symbols.size === 0) return;
+    clearTimeout(_bus.reconnectTimer);
+    _bus.reconnectTimer = setTimeout(_busConnect, _busReconnectDelay());
+    _bus.attempts += 1;
+  };
   ws.onmessage = (e) => {
     try {
       const msg = JSON.parse(e.data);
       const sym = (msg.stream || '').split('@')[0].toUpperCase();
       const val = parseFloat(msg.data?.c);
       if (!sym || !val) return;
+      _bus.lastMsgAt = Date.now();
       _bus.last.set(sym, val);
       _bus.listeners.get(sym)?.forEach(fn => fn(val));
     } catch (_) {}
