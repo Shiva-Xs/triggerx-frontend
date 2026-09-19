@@ -32,6 +32,71 @@ const SPA_ROUTES = [
 ];
 
 /**
+ * Per-route <head> overrides for the two SPA routes meant to be indexed.
+ *
+ * Every SPA route is served the same shell, and that shell's head describes the
+ * homepage - its <title>, its og:url, and a canonical pointing at "/". The page
+ * components do correct all three, but only from a useEffect, after hydration,
+ * once the lazy route chunk has loaded; and Google's own guidance is not to
+ * depend on JavaScript for rel=canonical. Left alone, /terms and /privacy each
+ * hand a crawler a document whose canonical names a different URL, which is the
+ * textbook way to be dropped as "Alternate page with proper canonical tag" - so
+ * neither page could ever be indexed on its own terms.
+ *
+ * Rewriting here puts the right tags in the bytes Googlebot receives, before a
+ * single script runs. The useEffect stays as it is: it now writes the same
+ * values that are already in the markup, and it still keeps the tab title
+ * correct on a client-side navigation, where no request reaches this Worker.
+ *
+ * /auth and /dashboard are deliberately absent - robots.txt disallows both, so
+ * their head tags are nobody's business.
+ */
+const ROUTE_META = {
+  '/privacy': {
+    title: 'Privacy Policy | TriggerX',
+    description:
+      'How TriggerX handles your data: what we store for price alerts, what we never collect, and how to delete your account.',
+  },
+  '/terms': {
+    title: 'Terms of Service | TriggerX',
+    description:
+      'The terms covering your use of TriggerX crypto price alerts, including acceptable use, availability, and account termination.',
+  },
+};
+
+/** Rewrites the shell's homepage head tags to describe `canonical` instead. */
+function withRouteMeta(response, canonical, meta) {
+  const setContent = (value) => ({
+    element(el) {
+      el.setAttribute('content', value);
+    },
+  });
+
+  return (
+    new HTMLRewriter()
+      // Scoped to the head: an inline <svg><title> elsewhere in the shell would
+      // otherwise be rewritten into the page title too.
+      .on('head title', {
+        element(el) {
+          el.setInnerContent(meta.title);
+        },
+      })
+      .on('link[rel="canonical"]', {
+        element(el) {
+          el.setAttribute('href', canonical);
+        },
+      })
+      .on('meta[property="og:url"]', setContent(canonical))
+      .on('meta[property="og:title"]', setContent(meta.title))
+      .on('meta[name="twitter:title"]', setContent(meta.title))
+      .on('meta[name="description"]', setContent(meta.description))
+      .on('meta[property="og:description"]', setContent(meta.description))
+      .on('meta[name="twitter:description"]', setContent(meta.description))
+      .transform(response)
+  );
+}
+
+/**
  * Runs ahead of the asset handler (assets.run_worker_first in wrangler.json). Without that, a
  * request matching a real file - "/" matches index.html - is served by the asset layer and this
  * Worker is never invoked, so the hostname check below would never run. _redirects cannot do it
@@ -66,7 +131,17 @@ export default {
       // landing page instead of the route. Asking for the directory returns the
       // same bytes at 200 with the URL intact.
       const shell = new URL('/', url);
-      return env.ASSETS.fetch(new Request(shell, request));
+      const response = await env.ASSETS.fetch(new Request(shell, request));
+
+      const meta = ROUTE_META[url.pathname.replace(/\/$/, '')];
+      if (!meta || !response.ok) return response;
+
+      // Pinned to the canonical origin rather than built from url.origin: a
+      // canonical must name the one true URL however the request arrived, and
+      // deriving it from the request would publish an http:// canonical to
+      // anything that reached this Worker over http.
+      const canonical = `https://${CANONICAL_HOST}${url.pathname.replace(/\/$/, '')}`;
+      return withRouteMeta(response, canonical, meta);
     }
 
     // Anything else: a real asset, or 404.html with a 404.
